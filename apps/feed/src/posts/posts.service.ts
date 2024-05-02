@@ -33,30 +33,32 @@ export class PostsService {
 
   async getPublicPostsPaginate(page: number, size: number) {
     const publicPost = await this.postsRepository.findAndPaginatePublicPosts(
-      { public: true, published: true },
+      { public: true, published: true, isDeleted: false },
       { pageNumber: page, pageSize: size },
     );
     return publicPost;
   }
 
-  async getProfileUserPost(userId: Types.ObjectId){
-    return await this.postsRepository.findAllProfilePost({user_id: userId});
+  async getProfileUserPost(userId: Types.ObjectId) {
+    return await this.postsRepository.findAllProfilePost({ user_id: userId });
   }
 
   async getProfileUserLiked(userId: Types.ObjectId) {
     const userLikes = await this.likesRepository.find({
       author_id: userId,
       isDeleted: false,
-      unliked: false
+      unliked: false,
     });
-    console.log("🚀 ~ userLikes:", userLikes);
-  
+    console.log('🚀 ~ userLikes:', userLikes);
+
     const postPromises = userLikes.map(async (like) => {
-      return this.postsRepository.getAllInforPostById(new Types.ObjectId(like.post_id));
+      return this.postsRepository.getAllInforPostById(
+        new Types.ObjectId(like.post_id),
+      );
     });
-  
+
     const posts = await Promise.all(postPromises);
-  
+
     return posts;
   }
 }

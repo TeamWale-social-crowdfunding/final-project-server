@@ -17,7 +17,6 @@ import { Types } from 'mongoose';
 import LocalJwtAuthGuard from '../guards/local-jwt-auth.guard';
 import { CreateUserRequest } from './dto/create-user.request';
 import { FollowUserDto } from './dto/follow-user.dto';
-import { GoogleAuthDto } from './dto/google-auth.request';
 import { UsersService } from './users.service';
 
 @Controller('auth/users')

@@ -10,8 +10,7 @@ import { GoogleAuthDto } from './users/dto/google-auth.request';
 import { GOOGLE_LOGIN_ACTIONS } from './constants/roles.enum';
 import { UsersRepository } from '@app/common/repositories/users.repository';
 import { generateRandomPassword } from './utils';
-import { InjectionHTTPExceptions } from '@app/common/decorators/try-catch';
-import { authErrors } from './errors/auth.errors';
+import { CreateChatUserArg, createChatUser } from './utils/chat.auth';
 
 export interface TokenPayload {
   userId: string;
@@ -167,6 +166,7 @@ export class AuthService {
     response: Response,
     values: { userAgent: string; ipAddress: string },
   ) {
+    console.log('Enter Google Auth');
     const isRegistedUser = await this.usersRepository.findOne({
       email: data.email,
     });
@@ -179,6 +179,7 @@ export class AuthService {
         authenticate: null,
       };
     } else {
+      console.log('Enter Google Auth: NEW USER');
       const newUser = await this.userService.createUser({
         email: data.email,
         password: generateRandomPassword(10),
@@ -190,6 +191,16 @@ export class AuthService {
         bio: 'string',
       });
 
+      const newChatUser: CreateChatUserArg = {
+        avatar: data.avatar,
+        username: data.email,
+        secret: 'google',
+        email: data.email,
+        first_name: data.firstName,
+        last_name: data.lastName,
+      };
+
+      await createChatUser(newChatUser);
       await this.login(newUser, response, values);
 
       return {

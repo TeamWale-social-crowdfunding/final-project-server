@@ -55,7 +55,7 @@ export class PostsController {
   }
 
   @ApiOperation({
-    description: 'Delete a Post, availble for only post owner or admin',
+    description: 'Delete a Post, available for only post owner or admin',
   })
   @UseGuards(JwtAuthGuard)
   @Patch('delete')

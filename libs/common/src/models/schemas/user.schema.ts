@@ -24,7 +24,7 @@ export class User extends AbstractDocument {
   @Prop()
   dateOfBirth: Date;
 
-  @Prop()
+  @Prop({ defaultValue: 'https://avatar.iran.liara.run/public' })
   avatar: string;
 
   @Prop({ type: [String], enum: ['user', 'admin'], default: ['user'] })
